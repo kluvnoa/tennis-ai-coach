@@ -1,0 +1,11 @@
+# 共通
+node_modules
+.env
+.env.local
+
+# Next.js
+/frontend/.next
+/frontend/.vercel
+
+# NestJS
+/backend/dist

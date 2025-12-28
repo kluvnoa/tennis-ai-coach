@@ -1,0 +1,23 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Model definitions start here
+// For now, just consult history is sufficient
+
+model ConsultHistory {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  userMessage String
+  aiMessage   String
+
+  topic  String?
+  userId String?
+}
