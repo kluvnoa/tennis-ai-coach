@@ -1,7 +1,7 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- `frontend/`: Next.js app. Source lives in `frontend/src/app`, shared UI in `frontend/src/components`, i18n in `frontend/src/i18n`, helpers in `frontend/src/lib`, middleware in `frontend/src/middleware.ts`, and static assets in `frontend/public` (locale messages in `frontend/messages`).
+- `frontend/`: Next.js app. Source lives in `frontend/src/app`, shared UI in `frontend/src/components`, i18n in `frontend/src/i18n`, helpers in `frontend/src/lib`, middleware in `frontend/src/middleware.ts`, static assets in `frontend/public`, and locale messages in `frontend/messages`.
 - `backend/`: NestJS app. Source lives in `backend/src` with `*.module.ts`, `*.service.ts`, and `*.controller.ts` (see `backend/src/consult`), plus generated and Prisma helpers in `backend/src/generated` and `backend/src/prisma`. Prisma schema and migrations are in `backend/prisma` and `backend/prisma/migrations`.
 - Tests: unit tests in `backend/src/**/*.spec.ts`, end-to-end tests in `backend/test`.
 
