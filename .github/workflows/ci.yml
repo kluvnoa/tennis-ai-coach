@@ -36,16 +36,16 @@ jobs:
         run: pnpm --dir backend install --frozen-lockfile
 
       - name: Lint frontend
-        run: pnpm --dir frontend run lint --if-present
+        run: pnpm --dir frontend run --if-present lint
 
       - name: Lint backend
-        run: pnpm --dir backend run lint --if-present
+        run: pnpm --dir backend run --if-present lint
 
       - name: Test frontend
-        run: pnpm --dir frontend run test --if-present
+        run: pnpm --dir frontend run --if-present test
 
       - name: Test backend
-        run: pnpm --dir backend run test --if-present
+        run: pnpm --dir backend run --if-present test
 
       - name: Audit frontend dependencies
         run: pnpm --dir frontend audit --audit-level high
