@@ -64,7 +64,12 @@ for (const project of projects) {
       "package.json",
     );
 
-    if (!fs.existsSync(packageJsonPath)) continue;
+    if (!fs.existsSync(packageJsonPath)) {
+      warnings.push(
+        `Missing package.json for ${packageName} in ${project} (expected at ${packageJsonPath}).`,
+      );
+      continue;
+    }
 
     let packageJson;
     try {
