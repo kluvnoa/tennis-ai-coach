@@ -11,16 +11,18 @@ const projects = ["frontend", "backend"];
 const packages = new Map();
 const warnings = [];
 
-const normalizeLicense = (license) => {
-  if (!license) return "UNKNOWN";
-  if (typeof license === "string") return license;
-  if (Array.isArray(license)) {
-    const values = license.map((entry) =>
+const normalizeLicense = (license, licenses) => {
+  // Support legacy "licenses" field (array of {type, url} objects)
+  const value = license ?? licenses;
+  if (!value) return "UNKNOWN";
+  if (typeof value === "string") return value;
+  if (Array.isArray(value)) {
+    const values = value.map((entry) =>
       typeof entry === "string" ? entry : entry?.type || "UNKNOWN",
     );
     return values.join(", ");
   }
-  if (typeof license === "object") return license.type || "UNKNOWN";
+  if (typeof value === "object") return value.type || "UNKNOWN";
   return "UNKNOWN";
 };
 
@@ -83,7 +85,7 @@ for (const project of projects) {
     }
     const name = packageJson.name || packageName;
     const version = packageJson.version || fallbackVersion;
-    const license = normalizeLicense(packageJson.license);
+    const license = normalizeLicense(packageJson.license, packageJson.licenses);
     const repository = normalizeRepository(packageJson.repository);
     const key = `${name}@${version}`;
 
