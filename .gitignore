@@ -1,7 +1,17 @@
-# 共通
+# Common
 node_modules
+
+# Environment files
 .env
-.env.local
+.env.*
+!.env.example
+!.env.sample
+
+# Private keys/certs
+*.pem
+*.key
+*.p12
+*.pfx
 
 # Next.js
 /frontend/.next
