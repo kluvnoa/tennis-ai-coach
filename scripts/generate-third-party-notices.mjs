@@ -66,7 +66,16 @@ for (const project of projects) {
 
     if (!fs.existsSync(packageJsonPath)) continue;
 
-    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
+    let packageJson;
+    try {
+      const fileContents = fs.readFileSync(packageJsonPath, "utf8");
+      packageJson = JSON.parse(fileContents);
+    } catch (error) {
+      warnings.push(
+        `Failed to read or parse package.json for ${packageName}@${fallbackVersion} at ${packageJsonPath}: ${error?.message || error}`,
+      );
+      continue;
+    }
     const name = packageJson.name || packageName;
     const version = packageJson.version || fallbackVersion;
     const license = normalizeLicense(packageJson.license);
