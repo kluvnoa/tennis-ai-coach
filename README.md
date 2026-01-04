@@ -60,4 +60,4 @@ Set `CORS_ORIGINS` environment variable for production (comma-separated list of 
 
 ### Third-party Licenses
 This project uses `sharp` which depends on `libvips` (LGPL-3.0-or-later).
-As we use dynamic linking, no source code disclosure is required. 
+As we use dynamic linking, no source code disclosure is required.
