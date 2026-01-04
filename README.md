@@ -35,9 +35,11 @@ Public-ready monorepo with a Next.js frontend and a NestJS backend.
 ### Backend (`backend/.env.example`)
 | Variable | Description |
 | --- | --- |
-| `DATABASE_URL` | Postgres connection string. |
+| `POSTGRES_USER` | Username to connect to Postgres. |
+| `POSTGRES_PASSWORD` | Password to connect to Postgres. |
 | `OPENAI_API_KEY` | OpenAI API key for model access. |
 | `OPENAI_MODEL` | OpenAI model identifier (for example `gpt-4o-mini`). |
+| `CORS_ORIGINS` | Comma-separated list of allowed origins for CORS (for example `http://localhost:3000,https://example.com`). |
 
 ## Security
 - Never commit `.env` files, API keys, or private keys. Use the provided `.env.example` files.
@@ -50,3 +52,12 @@ Public-ready monorepo with a Next.js frontend and a NestJS backend.
 - License: `LICENSE` (MIT).
 - Third-party notices: `THIRD_PARTY_NOTICES.md`.
 - Regenerate notices after installing dependencies in both apps: `node scripts/generate-third-party-notices.mjs`.
+
+## Security Considerations
+
+### CORS Configuration
+Set `CORS_ORIGINS` environment variable for production (comma-separated list of allowed origins).
+
+### Third-party Licenses
+This project uses `sharp` which depends on `libvips` (LGPL-3.0-or-later).
+As we use dynamic linking, no source code disclosure is required. 

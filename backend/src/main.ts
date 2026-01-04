@@ -5,9 +5,12 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const port = Number(process.env.PORT ?? 4000);
 
-  // Allow the frontend dev server to call the API during local development
+  const allowedOrigins = process.env.CORS_ORIGINS?.split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean) ?? ['http://localhost:3000'];
+
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: allowedOrigins,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   });
