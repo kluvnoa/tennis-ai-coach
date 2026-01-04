@@ -36,7 +36,7 @@ jobs:
       - name: Create main branch
         run: |
           # Check if main branch already exists
-          if git ls-remote --heads origin main | grep main; then
+          if git ls-remote --exit-code --heads origin main > /dev/null 2>&1; then
             echo "::warning::main branch already exists in remote"
             exit 0
           fi

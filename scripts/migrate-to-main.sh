@@ -70,11 +70,28 @@ echo ""
 echo "📤 Pushing main branch to origin..."
 git push -u origin main
 
+# Extract repository info for GitHub URL
+get_github_repo_url() {
+    local remote_url=$(git config --get remote.origin.url)
+    # Handle both HTTPS and SSH URLs
+    if [[ $remote_url =~ github\.com[:/]([^/]+/[^/]+)(\.git)?$ ]]; then
+        echo "${BASH_REMATCH[1]}"
+    else
+        echo ""
+    fi
+}
+
+REPO_PATH=$(get_github_repo_url)
+
 echo ""
 echo "✅ Success! The main branch has been created and pushed."
 echo ""
 echo "📋 Next steps:"
-echo "1. Go to https://github.com/$(git config --get remote.origin.url | sed 's/.*github.com[:/]\(.*\)\.git/\1/')/settings/branches"
+if [[ -n "$REPO_PATH" ]]; then
+    echo "1. Go to https://github.com/${REPO_PATH}/settings/branches"
+else
+    echo "1. Go to your repository Settings → Branches"
+fi
 echo "2. Change the default branch from 'master' to 'main'"
 echo "3. Update branch protection rules"
 echo "4. Notify contributors about the change"
