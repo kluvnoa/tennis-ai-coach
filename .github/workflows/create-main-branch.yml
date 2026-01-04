@@ -1,0 +1,55 @@
+name: Create Main Branch
+
+# This workflow helps with the default branch migration from master to main.
+# It should be triggered manually by repository administrators.
+# After running this workflow and verifying the main branch exists,
+# follow the steps in BRANCH_MIGRATION.md to complete the migration.
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_branch:
+        description: 'Source branch to create main from'
+        required: true
+        default: 'master'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  create-main-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_branch }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create main branch
+        run: |
+          # Check if main branch already exists
+          if git ls-remote --heads origin main | grep main; then
+            echo "::warning::main branch already exists in remote"
+            exit 0
+          fi
+          
+          # Create and push main branch
+          git checkout -b main
+          git push -u origin main
+          echo "::notice::Successfully created main branch from ${{ inputs.source_branch }}"
+
+      - name: Display next steps
+        run: |
+          echo "::notice::Main branch has been created. Next steps:"
+          echo "::notice::1. Go to repository Settings → Branches"
+          echo "::notice::2. Change the default branch from ${{ inputs.source_branch }} to main"
+          echo "::notice::3. Update branch protection rules for main"
+          echo "::notice::4. See BRANCH_MIGRATION.md for complete instructions"
