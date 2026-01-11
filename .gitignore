@@ -1,0 +1,21 @@
+# Common
+node_modules
+
+# Environment files
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Private keys/certs
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Next.js
+/frontend/.next
+/frontend/.vercel
+
+# NestJS
+/backend/dist

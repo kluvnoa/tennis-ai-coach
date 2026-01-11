@@ -1,0 +1,21 @@
+### GET
+GET http://localhost:4000/consult/history
+
+### POST
+POST http://localhost:4000/consult
+Content-Type: application/json
+
+{
+  "userMessage": "Can you give me some tips to improve my backhand?",
+  "aiMessage": "To improve your backhand, focus on keeping your wrist firm."
+}
+
+### POST advice
+POST http://localhost:4000/consult/advice
+Content-Type: application/json
+
+{
+  "question": "What drills should I do to improve my serve consistency?",
+  "level": "intermediate",
+  "playStyle": "baseline"
+}

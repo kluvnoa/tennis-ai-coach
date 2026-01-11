@@ -1,0 +1,43 @@
+{
+  "home": {
+    "title": "Tennis AI Coach",
+    "description": "硬式テニスのためのAIコーチアプリ（ポートフォリオ用プロジェクト）",
+    "goToAdvice": "相談画面へ"
+  },
+  "advice": {
+    "title": "Tennis AI Coach",
+    "version": "v0.1",
+    "description": "硬式テニスの悩みや課題を入力すると、AIコーチがアドバイスしてくれます。",
+    "loading": "読込中...",
+    "history": "履歴",
+    "historyTitle": "相談履歴",
+    "noHistory": "履歴がありません。",
+    "question": "質問:",
+    "answer": "回答:",
+    "level": "レベル",
+    "playStyle": "プレースタイル",
+    "questionLabel": "質問・相談内容",
+    "placeholder": "例：スピンサーブを打つといつもネットしてしまいます。原因と、1人でもできる練習メニューを教えてください。",
+    "error": "エラー:",
+    "thinking": "考え中...",
+    "submit": "AIコーチに相談する",
+    "noMessages": "まだ相談はありません。上のフォームから、現在の悩みや課題を入力してみてください。",
+    "you": "あなた",
+    "aiCoach": "AIコーチ"
+  },
+  "levels": {
+    "beginner": "初心者",
+    "intermediate": "中級",
+    "advanced": "上級"
+  },
+  "playStyles": {
+    "all-round": "オールラウンダー",
+    "baseline": "ベースライナー",
+    "serve-and-volley": "サーブ＆ボレー",
+    "counter-puncher": "カウンターパンチャー"
+  },
+  "errors": {
+    "fetchHistoryFailed": "履歴の取得に失敗しました",
+    "serverError": "サーバーエラーが発生しました"
+  }
+}

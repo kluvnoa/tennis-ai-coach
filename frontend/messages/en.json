@@ -1,0 +1,43 @@
+{
+  "home": {
+    "title": "Tennis AI Coach",
+    "description": "AI coaching app for tennis (portfolio project)",
+    "goToAdvice": "Go to Consultation"
+  },
+  "advice": {
+    "title": "Tennis AI Coach",
+    "version": "v0.1",
+    "description": "Enter your tennis concerns or challenges, and the AI coach will provide advice.",
+    "loading": "Loading...",
+    "history": "History",
+    "historyTitle": "Consultation History",
+    "noHistory": "No history available.",
+    "question": "Question:",
+    "answer": "Answer:",
+    "level": "Level",
+    "playStyle": "Play Style",
+    "questionLabel": "Question / Consultation",
+    "placeholder": "Example: My spin serve always hits the net. Please tell me the cause and a practice routine I can do alone.",
+    "error": "Error:",
+    "thinking": "Thinking...",
+    "submit": "Ask AI Coach",
+    "noMessages": "No consultations yet. Enter your current concerns or challenges in the form above.",
+    "you": "You",
+    "aiCoach": "AI Coach"
+  },
+  "levels": {
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced"
+  },
+  "playStyles": {
+    "all-round": "All-rounder",
+    "baseline": "Baseliner",
+    "serve-and-volley": "Serve & Volley",
+    "counter-puncher": "Counter-puncher"
+  },
+  "errors": {
+    "fetchHistoryFailed": "Failed to fetch history",
+    "serverError": "A server error occurred"
+  }
+}
