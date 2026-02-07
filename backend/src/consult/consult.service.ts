@@ -74,12 +74,11 @@ export class ConsultService {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: process.env.OPENAI_MODEL ?? 'gpt-4.1-nano',
+        model: process.env.OPENAI_MODEL ?? 'gpt-5-nano',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userContext },
         ],
-        temperature: 0.7,
       }),
     });
 
