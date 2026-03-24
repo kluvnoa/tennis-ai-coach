@@ -44,7 +44,32 @@ export class ConsultService {
 
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) {
-      throw new Error('OPENAI_API_KEY is not configured');
+      const answer = `
+        This is standard advice.
+        If you want an answer that directly addresses your question, please set OPENAI_API_KEY.
+
+        Sample advice:
+
+        Based on your question, first check whether your swing timing, contact point, and balance are stable.
+
+        Checkpoints:
+        - Keep your eyes on the ball until contact
+        - Make sure your weight shifts forward smoothly
+        - Avoid overswinging when you are under pressure
+
+        Solo drills:
+        - Do 20 shadow swings while checking your contact point
+        - Rally against a wall with a controlled tempo for 5-10 minutes
+        - Record your form and review your posture and follow-through
+
+        Precautions:
+        - Increase practice intensity gradually to avoid shoulder or elbow strain
+        - If your shots break down, reduce power and rebuild your rhythm first
+      `.trim();
+
+      await this.create(question, answer);
+
+      return { answer };
     }
 
     const systemPrompt = `
