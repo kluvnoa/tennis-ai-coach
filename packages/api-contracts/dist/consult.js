@@ -1,43 +1,27 @@
 "use strict";
-
-const { z } = require("zod");
-
-const IsoDateTimeSchema = z
-  .union([z.string().datetime({ offset: true }), z.date()])
-  .transform((value) => (value instanceof Date ? value.toISOString() : value));
-
-const ConsultHistoryItemSchema = z.object({
-  id: z.string(),
-  createdAt: IsoDateTimeSchema,
-  userMessage: z.string(),
-  aiMessage: z.string(),
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AdviceResponseSchema = exports.AdviceRequestSchema = exports.CreateConsultResponseSchema = exports.CreateConsultRequestSchema = exports.HistoryResponseSchema = exports.ConsultHistoryItemSchema = exports.IsoDateTimeSchema = void 0;
+const zod_1 = require("zod");
+exports.IsoDateTimeSchema = zod_1.z
+    .union([zod_1.z.string().datetime({ offset: true }), zod_1.z.date()])
+    .transform((value) => value instanceof Date ? value.toISOString() : value);
+exports.ConsultHistoryItemSchema = zod_1.z.object({
+    id: zod_1.z.string(),
+    createdAt: exports.IsoDateTimeSchema,
+    userMessage: zod_1.z.string(),
+    aiMessage: zod_1.z.string(),
 });
-
-const HistoryResponseSchema = z.array(ConsultHistoryItemSchema);
-
-const CreateConsultRequestSchema = z.object({
-  userMessage: z.string().trim().min(1),
-  aiMessage: z.string().trim().min(1),
+exports.HistoryResponseSchema = zod_1.z.array(exports.ConsultHistoryItemSchema);
+exports.CreateConsultRequestSchema = zod_1.z.object({
+    userMessage: zod_1.z.string().trim().min(1),
+    aiMessage: zod_1.z.string().trim().min(1),
 });
-
-const CreateConsultResponseSchema = ConsultHistoryItemSchema;
-
-const AdviceRequestSchema = z.object({
-  question: z.string().trim().min(1),
-  level: z.string().trim().min(1).optional(),
-  playStyle: z.string().trim().min(1).optional(),
+exports.CreateConsultResponseSchema = exports.ConsultHistoryItemSchema;
+exports.AdviceRequestSchema = zod_1.z.object({
+    question: zod_1.z.string().trim().min(1),
+    level: zod_1.z.string().trim().min(1).optional(),
+    playStyle: zod_1.z.string().trim().min(1).optional(),
 });
-
-const AdviceResponseSchema = z.object({
-  answer: z.string(),
+exports.AdviceResponseSchema = zod_1.z.object({
+    answer: zod_1.z.string(),
 });
-
-module.exports = {
-  AdviceRequestSchema,
-  AdviceResponseSchema,
-  ConsultHistoryItemSchema,
-  CreateConsultRequestSchema,
-  CreateConsultResponseSchema,
-  HistoryResponseSchema,
-  IsoDateTimeSchema,
-};
