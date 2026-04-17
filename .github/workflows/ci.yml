@@ -53,13 +53,18 @@ jobs:
       - name: Test backend
         run: pnpm --dir backend run --if-present test
 
-      - name: Audit frontend dependencies
-        run: pnpm --dir frontend audit --audit-level high
-
-      - name: Audit backend dependencies
-        run: pnpm --dir backend audit --audit-level high
-
       - name: Gitleaks scan
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  dependency-audit:
+    permissions:
+      actions: read
+      contents: read
+    uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@v2.3.4
+    with:
+      upload-sarif: false
+      scan-args: |-
+        --lockfile=./frontend/pnpm-lock.yaml
+        --lockfile=./backend/pnpm-lock.yaml
