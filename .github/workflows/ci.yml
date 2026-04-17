@@ -62,9 +62,10 @@ jobs:
     permissions:
       actions: read
       contents: read
-    uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@v2.3.4
+    uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@v2.3.0
     with:
       upload-sarif: false
       scan-args: |-
         --lockfile=./frontend/pnpm-lock.yaml
         --lockfile=./backend/pnpm-lock.yaml
+
