@@ -10,10 +10,10 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@tennis-ai-coach/api-contracts": "file:../packages/api-contracts",
     "@tanstack/react-query": "^5.90.12",
-    "next": "16.1.5",
-    "next-intl": "^4.6.1",
+    "@tennis-ai-coach/api-contracts": "file:../packages/api-contracts",
+    "next": "16.2.4",
+    "next-intl": "^4.9.1",
     "react": "19.2.0",
     "react-dom": "19.2.0"
   },
@@ -24,8 +24,20 @@
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
-    "eslint-config-next": "16.0.3",
+    "eslint-config-next": "16.2.4",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "pnpm": {
+    "overrides": {
+      "ajv@6": "6.14.0",
+      "brace-expansion@1": "1.1.13",
+      "brace-expansion@2": "2.0.3",
+      "picomatch@2": "2.3.2",
+      "picomatch@4": "4.0.4",
+      "flatted": "3.4.2",
+      "minimatch@3": "3.1.4",
+      "minimatch@9": "9.0.7"
+    }
   }
 }
