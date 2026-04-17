@@ -1,39 +1,36 @@
-// lib/api.ts
+import {
+  AdviceRequestSchema,
+  AdviceResponseSchema,
+  HistoryResponseSchema,
+  type AdviceRequest,
+  type AdviceResponse,
+  type ConsultHistoryItem as HistoryItem,
+} from "@tennis-ai-coach/api-contracts/consult";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
-export type HistoryItem = {
-  id: string;
-  createdAt: string;
-  userMessage: string;
-  aiMessage: string;
+type SchemaParser<T> = {
+  parse: (value: unknown) => T;
 };
 
-export type AdviceRequest = {
-  question: string;
-  level: string;
-  playStyle: string;
-};
+async function parseJson<T>(response: Response, schema: SchemaParser<T>): Promise<T> {
+  return schema.parse(await response.json());
+}
 
-export type AdviceResponse = {
-  answer: string;
-};
-
-// Fetch history
 export async function fetchHistory(): Promise<HistoryItem[]> {
   const res = await fetch(`${API_BASE_URL}/consult/history`);
   if (!res.ok) {
     throw new Error("Failed to fetch history");
   }
-  return res.json();
+  return parseJson(res, HistoryResponseSchema);
 }
 
-// Fetch advice
 export async function fetchAdvice(request: AdviceRequest): Promise<AdviceResponse> {
+  const payload = AdviceRequestSchema.parse(request);
   const res = await fetch(`${API_BASE_URL}/consult/advice`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(request),
+    body: JSON.stringify(payload),
   });
 
   if (!res.ok) {
@@ -41,5 +38,7 @@ export async function fetchAdvice(request: AdviceRequest): Promise<AdviceRespons
     throw new Error(data.message ?? data.error ?? "A server error occurred");
   }
 
-  return res.json();
+  return parseJson(res, AdviceResponseSchema);
 }
+
+export type { AdviceRequest, AdviceResponse, HistoryItem };

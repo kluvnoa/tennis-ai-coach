@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import {
+  AdviceResponseSchema,
+  type AdviceRequest,
+  type AdviceResponse,
+} from '@tennis-ai-coach/api-contracts/consult';
 import { PrismaService } from '../prisma/prisma.service';
 import { ConsultHistory } from '@prisma/client';
-
-interface AdviceRequest {
-  question: string;
-  level?: string;
-  playStyle?: string;
-}
 
 interface OpenAIResponse {
   choices?: {
@@ -20,7 +19,6 @@ interface OpenAIResponse {
 export class ConsultService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // Get the latest 10 records
   getLatest(): Promise<ConsultHistory[]> {
     return this.prisma.consultHistory.findMany({
       orderBy: { createdAt: 'desc' },
@@ -28,7 +26,6 @@ export class ConsultService {
     });
   }
 
-  // Create a single consultation history record
   create(userMessage: string, aiMessage: string) {
     return this.prisma.consultHistory.create({
       data: {
@@ -38,8 +35,7 @@ export class ConsultService {
     });
   }
 
-  // Call OpenAI API to get advice
-  async getAdvice(request: AdviceRequest): Promise<{ answer: string }> {
+  async getAdvice(request: AdviceRequest): Promise<AdviceResponse> {
     const { question, level, playStyle } = request;
 
     const apiKey = process.env.OPENAI_API_KEY;
@@ -117,10 +113,10 @@ export class ConsultService {
     const answer: string =
       data.choices?.[0]?.message?.content ??
       'Sorry, could not generate a response. Please try again.';
+    const response = AdviceResponseSchema.parse({ answer });
 
-    // Save history
-    await this.create(question, answer);
+    await this.create(question, response.answer);
 
-    return { answer };
+    return response;
   }
 }

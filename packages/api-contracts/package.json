@@ -1,0 +1,30 @@
+{
+  "name": "@tennis-ai-coach/api-contracts",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rm -rf dist"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./consult": {
+      "types": "./dist/consult.d.ts",
+      "default": "./dist/consult.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "zod": "^3"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}

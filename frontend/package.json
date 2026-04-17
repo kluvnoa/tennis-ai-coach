@@ -11,8 +11,9 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.12",
-    "next": "16.1.5",
-    "next-intl": "^4.6.1",
+    "@tennis-ai-coach/api-contracts": "file:../packages/api-contracts",
+    "next": "16.2.4",
+    "next-intl": "^4.9.1",
     "react": "19.2.0",
     "react-dom": "19.2.0"
   },
@@ -23,18 +24,25 @@
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
-    "eslint-config-next": "16.0.3",
+    "eslint-config-next": "16.2.4",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
   "pnpm": {
     "overrides": {
-      "eslint>minimatch": "^3.1.4",
-      "@typescript-eslint/typescript-estree>minimatch": "^9.0.7",
-      "flat-cache>flatted": "^3.4.2",
-      "eslint-plugin-import>minimatch": "^3.1.4",
-      "eslint-plugin-jsx-a11y>minimatch": "^3.1.4",
-      "minimatch@3.1.2": "3.1.5"
+      "@typescript-eslint/typescript-estree>minimatch": "9.0.9",
+      "ajv@6": "6.14.0",
+      "brace-expansion@1": "1.1.13",
+      "brace-expansion@2": "2.0.3",
+      "eslint-plugin-import>minimatch": "3.1.5",
+      "eslint-plugin-jsx-a11y>minimatch": "3.1.5",
+      "eslint>minimatch": "3.1.5",
+      "flat-cache>flatted": "3.4.2",
+      "flatted": "3.4.2",
+      "minimatch@3": "3.1.5",
+      "minimatch@9": "9.0.9",
+      "picomatch@2": "2.3.2",
+      "picomatch@4": "4.0.4"
     }
   }
 }

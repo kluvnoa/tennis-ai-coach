@@ -1,0 +1,14 @@
+.git
+.github
+.codex
+**/node_modules
+**/.next
+**/dist
+!packages/api-contracts/dist
+!packages/api-contracts/dist/**
+**/coverage
+**/.turbo
+**/.cache
+**/*.tsbuildinfo
+frontend/.env.local
+backend/.env
