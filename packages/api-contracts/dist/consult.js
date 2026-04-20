@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AdviceResponseSchema = exports.AdviceRequestSchema = exports.CreateConsultResponseSchema = exports.CreateConsultRequestSchema = exports.HistoryResponseSchema = exports.ConsultHistoryItemSchema = exports.IsoDateTimeSchema = void 0;
+exports.AdviceImageResponseSchema = exports.AdviceImageSchema = exports.AdviceImageRequestSchema = exports.AdviceResponseSchema = exports.AdviceRequestSchema = exports.CreateConsultResponseSchema = exports.CreateConsultRequestSchema = exports.HistoryResponseSchema = exports.ConsultHistoryItemSchema = exports.IsoDateTimeSchema = void 0;
 const zod_1 = require("zod");
 exports.IsoDateTimeSchema = zod_1.z
     .union([zod_1.z.string().datetime({ offset: true }), zod_1.z.date()])
@@ -24,4 +24,20 @@ exports.AdviceRequestSchema = zod_1.z.object({
 });
 exports.AdviceResponseSchema = zod_1.z.object({
     answer: zod_1.z.string(),
+});
+exports.AdviceImageRequestSchema = zod_1.z.object({
+    question: zod_1.z.string().trim().min(1),
+    answer: zod_1.z.string().trim().min(1),
+    level: zod_1.z.string().trim().min(1).optional(),
+    playStyle: zod_1.z.string().trim().min(1).optional(),
+    variant: zod_1.z.number().int().min(1).optional().default(1),
+});
+exports.AdviceImageSchema = zod_1.z.object({
+    imageDataUrl: zod_1.z.string().trim().min(1),
+    alt: zod_1.z.string().trim().min(1),
+    prompt: zod_1.z.string().trim().min(1),
+    variant: zod_1.z.number().int().min(1),
+});
+exports.AdviceImageResponseSchema = zod_1.z.object({
+    visual: exports.AdviceImageSchema,
 });

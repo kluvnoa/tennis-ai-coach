@@ -1,7 +1,11 @@
 import {
+  AdviceImageRequestSchema,
+  AdviceImageResponseSchema,
   AdviceRequestSchema,
   AdviceResponseSchema,
   HistoryResponseSchema,
+  type AdviceImageRequest,
+  type AdviceImageResponse,
   type AdviceRequest,
   type AdviceResponse,
   type ConsultHistoryItem as HistoryItem,
@@ -41,4 +45,28 @@ export async function fetchAdvice(request: AdviceRequest): Promise<AdviceRespons
   return parseJson(res, AdviceResponseSchema);
 }
 
-export type { AdviceRequest, AdviceResponse, HistoryItem };
+export async function fetchAdviceImage(
+  request: AdviceImageRequest,
+): Promise<AdviceImageResponse> {
+  const payload = AdviceImageRequestSchema.parse(request);
+  const res = await fetch(`${API_BASE_URL}/consult/advice-image`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.message ?? data.error ?? "A server error occurred");
+  }
+
+  return parseJson(res, AdviceImageResponseSchema);
+}
+
+export type {
+  AdviceImageRequest,
+  AdviceImageResponse,
+  AdviceRequest,
+  AdviceResponse,
+  HistoryItem,
+};

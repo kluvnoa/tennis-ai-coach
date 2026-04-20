@@ -19,3 +19,15 @@ Content-Type: application/json
   "level": "intermediate",
   "playStyle": "baseline"
 }
+
+### POST advice-image
+POST http://localhost:4000/consult/advice-image
+Content-Type: application/json
+
+{
+  "question": "Please give me some tips on how to improve my volleys.",
+  "answer": "Use a compact volley motion with a stable racket face, contact the ball slightly in front of your body, and transfer your weight forward through contact. Prioritize quick split-steps, soft hands, and short wall-volley drills that reinforce balance and recovery.",
+  "variant": 1,
+  "level": "Intermediate",
+  "playStyle": "Baseliner"
+}
