@@ -15,6 +15,7 @@ describe('ConsultController', () => {
             getLatest: jest.fn(),
             create: jest.fn(),
             getAdvice: jest.fn(),
+            generateAdviceImage: jest.fn(),
           },
         },
       ],

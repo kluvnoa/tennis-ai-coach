@@ -7,11 +7,15 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import {
+  AdviceImageRequestSchema,
+  AdviceImageResponseSchema,
   AdviceRequestSchema,
   AdviceResponseSchema,
   CreateConsultRequestSchema,
   CreateConsultResponseSchema,
   HistoryResponseSchema,
+  type AdviceImageRequest,
+  type AdviceImageResponse,
   type AdviceRequest,
   type AdviceResponse,
   type CreateConsultRequest,
@@ -47,6 +51,24 @@ export class ConsultController {
     try {
       return AdviceResponseSchema.parse(
         await this.consultService.getAdvice(body),
+      );
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        error instanceof Error ? error.message : 'An unexpected error occurred',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @Post('advice-image')
+  async getAdviceImage(
+    @Body(new ZodValidationPipe(AdviceImageRequestSchema))
+    body: AdviceImageRequest,
+  ): Promise<AdviceImageResponse> {
+    try {
+      return AdviceImageResponseSchema.parse(
+        await this.consultService.generateAdviceImage(body),
       );
     } catch (error) {
       console.error(error);

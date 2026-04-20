@@ -1,16 +1,47 @@
 // app/[locale]/advice/page.tsx
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations, useLocale } from "next-intl";
-import { fetchHistory, fetchAdvice, type HistoryItem } from "@/lib/api";
+import {
+  fetchHistory,
+  fetchAdvice,
+  fetchAdviceImage,
+  type HistoryItem,
+} from "@/lib/api";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
 
-type Message = {
-  role: "user" | "assistant";
+type AdviceContext = {
+  question: string;
+  level: string;
+  playStyle: string;
+};
+
+type AssistantVisual = {
+  status: "loading" | "ready" | "error";
+  variant: number;
+  imageDataUrl?: string;
+  alt?: string;
+  error?: string;
+};
+
+type UserMessage = {
+  id: string;
+  role: "user";
   content: string;
 };
+
+type AssistantMessage = {
+  id: string;
+  role: "assistant";
+  content: string;
+  context: AdviceContext;
+  visual?: AssistantVisual;
+};
+
+type Message = UserMessage | AssistantMessage;
 
 const levelKeys = ["beginner", "intermediate", "advanced"] as const;
 const playStyleKeys = [
@@ -19,6 +50,14 @@ const playStyleKeys = [
   "serve-and-volley",
   "counter-puncher",
 ] as const;
+
+function createMessageId() {
+  return globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`;
+}
+
+function isAssistantMessage(message: Message): message is AssistantMessage {
+  return message.role === "assistant";
+}
 
 export default function AdvicePage() {
   const t = useTranslations();
@@ -47,17 +86,72 @@ export default function AdvicePage() {
   // Fetch advice (useMutation)
   const adviceMutation = useMutation({
     mutationFn: fetchAdvice,
-    onSuccess: (data) => {
-      const assistantMessage: Message = {
-        role: "assistant",
-        content: data.answer,
-      };
-      setMessages((prev) => [...prev, assistantMessage]);
-      setQuestion("");
-      // Invalidate history to fetch latest data on next request
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["history"] });
     },
   });
+
+  function updateAssistantMessage(
+    messageId: string,
+    updater: (message: AssistantMessage) => AssistantMessage,
+  ) {
+    setMessages((prev) =>
+      prev.map((message) => {
+        if (!isAssistantMessage(message) || message.id !== messageId) {
+          return message;
+        }
+
+        return updater(message);
+      }),
+    );
+  }
+
+  async function generateAdviceIllustration(
+    messageId: string,
+    context: AdviceContext,
+    answer: string,
+    variant: number,
+  ) {
+    updateAssistantMessage(messageId, (message) => ({
+      ...message,
+      visual: {
+        ...message.visual,
+        status: "loading",
+        variant,
+        error: undefined,
+      },
+    }));
+
+    try {
+      const response = await fetchAdviceImage({
+        question: context.question,
+        answer,
+        level: context.level,
+        playStyle: context.playStyle,
+        variant,
+      });
+
+      updateAssistantMessage(messageId, (message) => ({
+        ...message,
+        visual: {
+          status: "ready",
+          variant: response.visual.variant,
+          imageDataUrl: response.visual.imageDataUrl,
+          alt: response.visual.alt,
+        },
+      }));
+    } catch (error) {
+      updateAssistantMessage(messageId, (message) => ({
+        ...message,
+        visual: {
+          ...message.visual,
+          status: "error",
+          variant,
+          error: error instanceof Error ? error.message : t("advice.imageError"),
+        },
+      }));
+    }
+  }
 
   async function handleHistoryClick() {
     await refetchHistory();
@@ -66,16 +160,54 @@ export default function AdvicePage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!question.trim()) return;
+    const trimmedQuestion = question.trim();
+    if (!trimmedQuestion) return;
 
-    const userMessage: Message = { role: "user", content: question };
+    const userMessage: UserMessage = {
+      id: createMessageId(),
+      role: "user",
+      content: trimmedQuestion,
+    };
     setMessages((prev) => [...prev, userMessage]);
 
-    adviceMutation.mutate({
-      question,
-      level,
-      playStyle,
-    });
+    try {
+      const data = await adviceMutation.mutateAsync({
+        question: trimmedQuestion,
+        level,
+        playStyle,
+      });
+
+      const assistantMessageId = createMessageId();
+      const context: AdviceContext = {
+        question: trimmedQuestion,
+        level,
+        playStyle,
+      };
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: assistantMessageId,
+          role: "assistant",
+          content: data.answer,
+          context,
+          visual: {
+            status: "loading",
+            variant: 1,
+          },
+        },
+      ]);
+      setQuestion("");
+
+      void generateAdviceIllustration(
+        assistantMessageId,
+        context,
+        data.answer,
+        1,
+      );
+    } catch {
+      return;
+    }
   }
 
   const error =
@@ -224,9 +356,9 @@ export default function AdvicePage() {
             <p className="text-sm text-slate-400">{t("advice.noMessages")}</p>
           )}
 
-          {messages.map((m, idx) => (
+          {messages.map((m) => (
             <div
-              key={idx}
+              key={m.id}
               className={`rounded-xl border px-4 py-3 text-sm whitespace-pre-wrap ${
                 m.role === "user"
                   ? "border-sky-700 bg-sky-950/60"
@@ -237,6 +369,64 @@ export default function AdvicePage() {
                 {m.role === "user" ? t("advice.you") : t("advice.aiCoach")}
               </div>
               <div>{m.content}</div>
+
+              {isAssistantMessage(m) && (
+                <div className="mt-4 space-y-3">
+                  <div className="rounded-lg border border-slate-700 bg-slate-950/60 p-3">
+                    <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-300">
+                      {t("advice.illustration")}
+                    </div>
+
+                    {m.visual?.status === "loading" && (
+                      <p className="text-sm text-slate-300">
+                        {t("advice.imageLoading")}
+                      </p>
+                    )}
+
+                    {m.visual?.status === "error" && (
+                      <p className="text-sm text-red-300">
+                        {t("advice.imageError")}{" "}
+                        {m.visual.error ? `(${m.visual.error})` : ""}
+                      </p>
+                    )}
+
+                    {m.visual?.imageDataUrl && (
+                      <Image
+                        src={m.visual.imageDataUrl}
+                        alt={m.visual.alt ?? t("advice.illustration")}
+                        width={1024}
+                        height={1024}
+                        unoptimized
+                        className="w-full rounded-lg border border-slate-700"
+                      />
+                    )}
+
+                    <p className="mt-3 text-xs text-slate-400">
+                      {t("advice.imageDisclaimer")}
+                    </p>
+                  </div>
+
+                  {(m.visual?.imageDataUrl || m.visual?.status === "error") && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        void generateAdviceIllustration(
+                          m.id,
+                          m.context,
+                          m.content,
+                          (m.visual?.variant ?? 0) + 1,
+                        )
+                      }
+                      disabled={m.visual?.status === "loading"}
+                      className="inline-flex items-center justify-center rounded-md bg-slate-700 hover:bg-slate-600 disabled:opacity-60 px-3 py-2 text-sm font-medium transition"
+                    >
+                      {m.visual?.status === "loading"
+                        ? t("advice.regeneratingImage")
+                        : t("advice.regenerateImage")}
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>

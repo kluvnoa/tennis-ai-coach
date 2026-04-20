@@ -78,9 +78,78 @@ export declare const AdviceResponseSchema: z.ZodObject<{
 }, {
     answer: string;
 }>;
+export declare const AdviceImageRequestSchema: z.ZodObject<{
+    question: z.ZodString;
+    answer: z.ZodString;
+    level: z.ZodOptional<z.ZodString>;
+    playStyle: z.ZodOptional<z.ZodString>;
+    variant: z.ZodDefault<z.ZodOptional<z.ZodNumber>>;
+}, "strip", z.ZodTypeAny, {
+    question: string;
+    answer: string;
+    variant: number;
+    level?: string | undefined;
+    playStyle?: string | undefined;
+}, {
+    question: string;
+    answer: string;
+    level?: string | undefined;
+    playStyle?: string | undefined;
+    variant?: number | undefined;
+}>;
+export declare const AdviceImageSchema: z.ZodObject<{
+    imageDataUrl: z.ZodString;
+    alt: z.ZodString;
+    prompt: z.ZodString;
+    variant: z.ZodNumber;
+}, "strip", z.ZodTypeAny, {
+    variant: number;
+    imageDataUrl: string;
+    alt: string;
+    prompt: string;
+}, {
+    variant: number;
+    imageDataUrl: string;
+    alt: string;
+    prompt: string;
+}>;
+export declare const AdviceImageResponseSchema: z.ZodObject<{
+    visual: z.ZodObject<{
+        imageDataUrl: z.ZodString;
+        alt: z.ZodString;
+        prompt: z.ZodString;
+        variant: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        variant: number;
+        imageDataUrl: string;
+        alt: string;
+        prompt: string;
+    }, {
+        variant: number;
+        imageDataUrl: string;
+        alt: string;
+        prompt: string;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    visual: {
+        variant: number;
+        imageDataUrl: string;
+        alt: string;
+        prompt: string;
+    };
+}, {
+    visual: {
+        variant: number;
+        imageDataUrl: string;
+        alt: string;
+        prompt: string;
+    };
+}>;
 export type ConsultHistoryItem = z.infer<typeof ConsultHistoryItemSchema>;
 export type HistoryResponse = z.infer<typeof HistoryResponseSchema>;
 export type CreateConsultRequest = z.infer<typeof CreateConsultRequestSchema>;
 export type CreateConsultResponse = z.infer<typeof CreateConsultResponseSchema>;
 export type AdviceRequest = z.infer<typeof AdviceRequestSchema>;
 export type AdviceResponse = z.infer<typeof AdviceResponseSchema>;
+export type AdviceImageRequest = z.infer<typeof AdviceImageRequestSchema>;
+export type AdviceImageResponse = z.infer<typeof AdviceImageResponseSchema>;
