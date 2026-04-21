@@ -25,8 +25,9 @@
     "you": "You",
     "aiCoach": "AI Coach",
     "illustration": "Illustration",
-    "imageLoading": "Generating an instructional illustration...",
-    "imageDisclaimer": "This generated image visualizes the coaching advice as a human movement illustration.",
+    "imageLoading": "Generating a motion-sequence illustration from the coaching advice...",
+    "imageDisclaimer": "This generated image visualizes the coaching advice as a sequence of 3 to 4 movement checkpoints.",
+    "motionSteps": "Motion checkpoints",
     "regenerateImage": "Generate Another Variation",
     "regeneratingImage": "Generating Another Variation...",
     "imageError": "Could not generate the illustration."

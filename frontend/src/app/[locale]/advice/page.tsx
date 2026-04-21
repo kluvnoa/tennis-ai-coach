@@ -24,6 +24,11 @@ type AssistantVisual = {
   variant: number;
   imageDataUrl?: string;
   alt?: string;
+  layout?: "sequence";
+  steps?: Array<{
+    title: string;
+    focus: string;
+  }>;
   error?: string;
 };
 
@@ -138,6 +143,8 @@ export default function AdvicePage() {
           variant: response.visual.variant,
           imageDataUrl: response.visual.imageDataUrl,
           alt: response.visual.alt,
+          layout: response.visual.layout,
+          steps: response.visual.steps,
         },
       }));
     } catch (error) {
@@ -391,14 +398,41 @@ export default function AdvicePage() {
                     )}
 
                     {m.visual?.imageDataUrl && (
-                      <Image
-                        src={m.visual.imageDataUrl}
-                        alt={m.visual.alt ?? t("advice.illustration")}
-                        width={1024}
-                        height={1024}
-                        unoptimized
-                        className="w-full rounded-lg border border-slate-700"
-                      />
+                      <div className="space-y-3">
+                        <Image
+                          src={m.visual.imageDataUrl}
+                          alt={m.visual.alt ?? t("advice.illustration")}
+                          width={1360}
+                          height={720}
+                          unoptimized
+                          className="w-full rounded-lg border border-slate-700"
+                        />
+
+                        {m.visual.layout === "sequence" &&
+                          m.visual.steps &&
+                          m.visual.steps.length > 0 && (
+                            <div className="rounded-lg border border-slate-800 bg-slate-900/80 p-3">
+                              <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-300">
+                                {t("advice.motionSteps")}
+                              </div>
+                              <div className="space-y-2">
+                                {m.visual.steps.map((step, index) => (
+                                  <div
+                                    key={`${m.id}-step-${index}`}
+                                    className="rounded-md border border-slate-800 bg-slate-950/60 px-3 py-2"
+                                  >
+                                    <div className="text-sm font-semibold text-slate-100">
+                                      {index + 1}. {step.title}
+                                    </div>
+                                    <div className="mt-1 text-xs text-slate-300">
+                                      {step.focus}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                      </div>
                     )}
 
                     <p className="mt-3 text-xs text-slate-400">

@@ -40,11 +40,18 @@ export const AdviceImageRequestSchema = z.object({
   variant: z.number().int().min(1).optional().default(1),
 });
 
+export const AdviceImageStepSchema = z.object({
+  title: z.string().trim().min(1),
+  focus: z.string().trim().min(1),
+});
+
 export const AdviceImageSchema = z.object({
   imageDataUrl: z.string().trim().min(1),
   alt: z.string().trim().min(1),
   prompt: z.string().trim().min(1),
   variant: z.number().int().min(1),
+  layout: z.literal("sequence"),
+  steps: z.array(AdviceImageStepSchema).min(3).max(4),
 });
 
 export const AdviceImageResponseSchema = z.object({

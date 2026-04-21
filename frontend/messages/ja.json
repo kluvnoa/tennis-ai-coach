@@ -25,8 +25,9 @@
     "you": "あなた",
     "aiCoach": "AIコーチ",
     "illustration": "イメージ図",
-    "imageLoading": "アドバイス内容をもとにイメージ図を生成中...",
-    "imageDisclaimer": "この画像はアドバイス内容を人の動きのイメージとして自動生成したものです。",
+    "imageLoading": "アドバイス内容をもとに動作の流れを示すイメージ図を生成中...",
+    "imageDisclaimer": "この画像はアドバイス内容をもとに、3〜4段階の動きとして自動生成したイメージです。",
+    "motionSteps": "動作のポイント",
     "regenerateImage": "別パターンを生成",
     "regeneratingImage": "別パターンを生成中...",
     "imageError": "イメージ図を生成できませんでした。"
