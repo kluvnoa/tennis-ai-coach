@@ -97,21 +97,52 @@ export declare const AdviceImageRequestSchema: z.ZodObject<{
     playStyle?: string | undefined;
     variant?: number | undefined;
 }>;
+export declare const AdviceImageStepSchema: z.ZodObject<{
+    title: z.ZodString;
+    focus: z.ZodString;
+}, "strip", z.ZodTypeAny, {
+    title: string;
+    focus: string;
+}, {
+    title: string;
+    focus: string;
+}>;
 export declare const AdviceImageSchema: z.ZodObject<{
     imageDataUrl: z.ZodString;
     alt: z.ZodString;
     prompt: z.ZodString;
     variant: z.ZodNumber;
+    layout: z.ZodLiteral<"sequence">;
+    steps: z.ZodArray<z.ZodObject<{
+        title: z.ZodString;
+        focus: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        title: string;
+        focus: string;
+    }, {
+        title: string;
+        focus: string;
+    }>, "many">;
 }, "strip", z.ZodTypeAny, {
     variant: number;
     imageDataUrl: string;
     alt: string;
     prompt: string;
+    layout: "sequence";
+    steps: {
+        title: string;
+        focus: string;
+    }[];
 }, {
     variant: number;
     imageDataUrl: string;
     alt: string;
     prompt: string;
+    layout: "sequence";
+    steps: {
+        title: string;
+        focus: string;
+    }[];
 }>;
 export declare const AdviceImageResponseSchema: z.ZodObject<{
     visual: z.ZodObject<{
@@ -119,16 +150,37 @@ export declare const AdviceImageResponseSchema: z.ZodObject<{
         alt: z.ZodString;
         prompt: z.ZodString;
         variant: z.ZodNumber;
+        layout: z.ZodLiteral<"sequence">;
+        steps: z.ZodArray<z.ZodObject<{
+            title: z.ZodString;
+            focus: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            title: string;
+            focus: string;
+        }, {
+            title: string;
+            focus: string;
+        }>, "many">;
     }, "strip", z.ZodTypeAny, {
         variant: number;
         imageDataUrl: string;
         alt: string;
         prompt: string;
+        layout: "sequence";
+        steps: {
+            title: string;
+            focus: string;
+        }[];
     }, {
         variant: number;
         imageDataUrl: string;
         alt: string;
         prompt: string;
+        layout: "sequence";
+        steps: {
+            title: string;
+            focus: string;
+        }[];
     }>;
 }, "strip", z.ZodTypeAny, {
     visual: {
@@ -136,6 +188,11 @@ export declare const AdviceImageResponseSchema: z.ZodObject<{
         imageDataUrl: string;
         alt: string;
         prompt: string;
+        layout: "sequence";
+        steps: {
+            title: string;
+            focus: string;
+        }[];
     };
 }, {
     visual: {
@@ -143,6 +200,11 @@ export declare const AdviceImageResponseSchema: z.ZodObject<{
         imageDataUrl: string;
         alt: string;
         prompt: string;
+        layout: "sequence";
+        steps: {
+            title: string;
+            focus: string;
+        }[];
     };
 }>;
 export type ConsultHistoryItem = z.infer<typeof ConsultHistoryItemSchema>;
