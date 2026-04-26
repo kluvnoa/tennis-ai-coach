@@ -80,9 +80,9 @@ const DUMMY_ADVICE_IMAGE_RESPONSE_PATH = resolve(
 );
 const SEQUENCE_LAYOUT = 'sequence' as const;
 const PANEL_GAP = 24;
-const PANEL_TOP = 120;
+const PANEL_TOP = 56;
 const PANEL_HEIGHT = 300;
-const PANEL_FOOTER_HEIGHT = 148;
+const PANEL_FOOTER_HEIGHT = 56;
 const BOARD_PADDING = 32;
 const BOARD_BACKGROUND = '#020617';
 const BOARD_PANEL_BACKGROUND = '#0f172a';
@@ -483,48 +483,6 @@ export class ConsultService {
     return Buffer.from(base64, 'base64');
   }
 
-  private escapeXml(value: string): string {
-    return value
-      .replaceAll('&', '&amp;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;')
-      .replaceAll('"', '&quot;')
-      .replaceAll("'", '&apos;');
-  }
-
-  private wrapText(value: string, maxCharsPerLine: number): string[] {
-    if (!value.includes(' ')) {
-      const lines: string[] = [];
-      for (let index = 0; index < value.length; index += maxCharsPerLine) {
-        lines.push(value.slice(index, index + maxCharsPerLine));
-      }
-      return lines;
-    }
-
-    const words = value.split(/\s+/).filter(Boolean);
-    const lines: string[] = [];
-    let currentLine = '';
-
-    for (const word of words) {
-      const next = currentLine ? `${currentLine} ${word}` : word;
-      if (next.length <= maxCharsPerLine) {
-        currentLine = next;
-        continue;
-      }
-
-      if (currentLine) {
-        lines.push(currentLine);
-      }
-      currentLine = word;
-    }
-
-    if (currentLine) {
-      lines.push(currentLine);
-    }
-
-    return lines;
-  }
-
   private buildSequenceOverlay(
     plan: MotionPlan,
     width: number,
@@ -532,29 +490,16 @@ export class ConsultService {
     panelWidth: number,
   ): string {
     const stepCount = plan.steps.length;
-    const textY = PANEL_TOP + PANEL_HEIGHT + 28;
     const arrowY = PANEL_TOP + PANEL_HEIGHT / 2;
-    const summaryLabel = this.isLikelyJapanese(plan.title)
-      ? `1枚の画像で${stepCount}つの動作ポイント`
-      : `One image, ${stepCount} motion checkpoints`;
     const panels = plan.steps
-      .map((step, index) => {
+      .map((_, index) => {
         const left = BOARD_PADDING + index * (panelWidth + PANEL_GAP);
         const color = STEP_ACCENT_COLORS[index % STEP_ACCENT_COLORS.length];
-        const wrappedFocus = this.wrapText(step.focus, 24).slice(0, 3);
-        const focusTspans = wrappedFocus
-          .map(
-            (line, lineIndex) =>
-              `<tspan x="${left + 16}" dy="${lineIndex === 0 ? 0 : 18}">${this.escapeXml(line)}</tspan>`,
-          )
-          .join('');
 
         return `
           <rect x="${left - 1}" y="${PANEL_TOP - 1}" width="${panelWidth + 2}" height="${PANEL_HEIGHT + 2}" rx="20" fill="none" stroke="${BOARD_PANEL_BORDER}" stroke-width="2" />
-          <rect x="${left + 16}" y="${PANEL_TOP + 16}" width="34" height="34" rx="17" fill="${color}" />
-          <text x="${left + 33}" y="${PANEL_TOP + 39}" text-anchor="middle" font-size="16" font-weight="700" fill="#020617">${index + 1}</text>
-          <text x="${left + 16}" y="${textY}" font-size="18" font-weight="700" fill="#e2e8f0">${this.escapeXml(step.title)}</text>
-          <text x="${left + 16}" y="${textY + 28}" font-size="14" fill="#cbd5e1">${focusTspans}</text>
+          <rect x="${left + 16}" y="${PANEL_TOP + 16}" width="${panelWidth - 32}" height="8" rx="4" fill="${color}" opacity="0.9" />
+          <circle cx="${left + 28}" cy="${PANEL_TOP + 50}" r="12" fill="${color}" />
         `;
       })
       .join('');
@@ -573,10 +518,7 @@ export class ConsultService {
 
     return `
       <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
-        <rect width="${width}" height="${height}" rx="32" fill="${BOARD_BACKGROUND}" />
-        <rect x="16" y="16" width="${width - 32}" height="${height - 32}" rx="24" fill="${BOARD_PANEL_BACKGROUND}" opacity="0.55" />
-        <text x="${BOARD_PADDING}" y="56" font-size="30" font-weight="700" fill="#f8fafc">${this.escapeXml(plan.title)}</text>
-        <text x="${BOARD_PADDING}" y="84" font-size="15" fill="#94a3b8">${this.escapeXml(summaryLabel)}</text>
+        <rect x="12" y="12" width="${width - 24}" height="${height - 24}" rx="28" fill="none" stroke="#0f172a" stroke-width="2" />
         ${panels}
         ${arrows}
       </svg>
@@ -682,7 +624,7 @@ export class ConsultService {
           Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          model: process.env.OPENAI_MODEL ?? 'gpt-5-nano',
+          model: process.env.OPENAI_MODEL ?? 'gpt-5.4-nano',
           response_format: {
             type: 'json_object',
           },
@@ -776,10 +718,10 @@ export class ConsultService {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: process.env.OPENAI_IMAGE_MODEL ?? 'gpt-image-1-mini',
+        model: process.env.OPENAI_IMAGE_MODEL ?? 'gpt-image-2',
         prompt,
         size: '1024x1024',
-        quality: 'low',
+        quality: 'medium',
         output_format: 'png',
       }),
     });
@@ -860,7 +802,7 @@ export class ConsultService {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: process.env.OPENAI_MODEL ?? 'gpt-5-nano',
+        model: process.env.OPENAI_MODEL ?? 'gpt-5.4-nano',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userContext },
